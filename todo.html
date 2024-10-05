@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Management App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      background-color: #f9f9f9;
+      margin: 5px 0;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      border-radius: 5px;
+    }
+
+    .delete {
+      background-color: #dc3545;
+      border: none;
+      padding: 5px 10px;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .delete:hover {
+      background-color: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Task Manager</h1>
+
+    <div>
+      <input type="text" id="taskInput" placeholder="Enter a new task">
+      <button id="addTaskButton">Add Task</button>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    // Retrieve tasks from localStorage if they exist
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    const taskInput = document.getElementById('taskInput');
+    const addTaskButton = document.getElementById('addTaskButton');
+    const taskList = document.getElementById('taskList');
+
+    // Function to render the tasks
+    function renderTasks() {
+      taskList.innerHTML = ''; // Clear existing list
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${task} <button class="delete" data-index="${index}">Delete</button>`;
+        taskList.appendChild(li);
+      });
+
+      // Save tasks to localStorage
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Add task
+    addTaskButton.addEventListener('click', function() {
+      const taskText = taskInput.value.trim();
+
+      if (taskText) {
+        tasks.push(taskText);
+        taskInput.value = '';
+        renderTasks();
+      }
+    });
+
+    // Delete task
+    taskList.addEventListener('click', function(event) {
+      if (event.target.classList.contains('delete')) {
+        const index = event.target.getAttribute('data-index');
+        tasks.splice(index, 1);
+        renderTasks();
+      }
+    });
+
+    // Initial render of tasks
+    renderTasks();
+  </script>
+
+</body>
+</html>
